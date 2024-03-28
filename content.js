@@ -22,12 +22,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
         // Animation logic
         let posX = 0;
-        const step = 3; // Pixels to move in each step
+        const step = 2; // Pixels to move in each step
         const maxX = window.innerWidth; // Edge of the window
 
         function animate() {
             posX += step;
-            if (posX == maxX - 117) {
+            if (posX == maxX - 116) {
                 const messageBubble = document.createElement('div');
                 messageBubble.textContent = 'Time to eat!';
                 messageBubble.style.fontFamily = 'monospace'
