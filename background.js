@@ -1,6 +1,6 @@
 chrome.alarms.create('eatReminder', // Creates an alarm called eatReminder
 { 
-delayInMinutes: 0.083, // 5 seconds
+delayInMinutes: 0.05, // 3 seconds
 periodInMinutes: 180
 });
 
