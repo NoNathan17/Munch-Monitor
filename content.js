@@ -7,7 +7,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.log('Spawning widget...');
 
         const myList = ['pusheen', 'cat', 'dog', 'penguin', 'cow', 'axolotyl', 'eevee', 'milkmocha']
-        // const myList = ['milkmocha']
         const randomWidget = myList[Math.floor(Math.random() * myList.length)] // Gets a random widget from myList
 
         const widget = document.createElement('img');
