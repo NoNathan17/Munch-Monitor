@@ -1,12 +1,20 @@
-{ 
+{
     "manifest_version": 3,
     "name": "Eating Reminder",
-    "description": "A chrome extension that reminds you to eat regularly",
+    "description": "A Chrome extension that reminds you to eat regularly",
     "version": "1.0.0",
     "background": {
-          "service_worker": "background.js"
-        },
-    "permissions": ["alarms", "tabs"], 
+        "service_worker": "background.js"
+    },
+    "permissions": [
+        "alarms",
+        "tabs",
+        "scripting"
+    ],
+    "host_permissions": [
+        "http://*/*",
+        "https://*/*"
+    ],
     "action": {
         "default_icon": {
             "16": "icons/icon-16.png",
@@ -18,8 +26,8 @@
     "content_scripts": [
         {
             "js": ["content.js"],
-            "matches": ["<all_urls>"]
-          }
+            "matches": ["http://*/*", "https://*/*"]
+        }
     ],
     "icons": {
         "16": "icons/icon-16.png",
@@ -29,8 +37,11 @@
     },
     "web_accessible_resources": [
         {
-        "resources": ["*.gif"],
-        "matches": ["<all_urls>"]
+            "resources": ["widgets/*.gif"],
+            "matches": ["http://*/*", "https://*/*"]
         }
-    ]
- }
+    ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self';"
+    }
+}
