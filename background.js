@@ -1,28 +1,26 @@
 let widgetActive = false // checks if widget is active
 
 function createAlarm(interval) {
-  chrome.alarms.clear('eatReminder', () => { // clears any existing alarms
-    console.log('Previous alarm cleared');
-  });
-
-  chrome.alarms.create('eatReminder', // Creates an alarm called eatReminder
+  chrome.alarms.create('eatReminder', // creates an alarm called eatReminder
   { 
-  delayInMinutes: 0.05, // 3 seconds
+  delayInMinutes: interval, 
   periodInMinutes: interval
   });
 
+  console.log('New alarm created!')
 }
+
 
 chrome.alarms.onAlarm.addListener(function(alarm) {
   if (alarm.name === 'eatReminder') {
       chrome.tabs.query({active: true, currentWindow: true }, function(tabs) {
           tabs.forEach(function(tab) {
-              // Use chrome.scripting.executeScript to inject the content script
+              // injects the content script
               chrome.scripting.executeScript({
                   target: { tabId: tab.id },
                   files: ['content.js']
               }, () => {
-                  // After content script injection, send a message to it
+                  // sends message to content script
                   chrome.tabs.sendMessage(tab.id, { action: 'spawnWidget' });
               });
           });
@@ -30,12 +28,26 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
   }
 });
 
-// Listen for messages from the popup to set a new reminder
+// listen for messages from the popup to set a new reminder
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'setReminder') {
-      const interval = message.interval; // Get the interval from the message
-      createAlarm(interval); // Call the function to create the alarm
-      sendResponse({ status: 'success', message: `Reminder set for every ${interval} minutes!` });
+      const interval = message.interval; // gets the interval from the message
+      
+      chrome.alarms.clear('eatReminder', () => {
+        console.log('Previous alarm cleared');
+        createAlarm(interval); // Create the new alarm after clearing the old one
+
+
+        // saves current reminder time to storage
+        const hours = Math.floor(interval / 60);
+        const minutes = interval % 60;
+        chrome.storage.local.set({ currentReminder: { hours, minutes } });
+
+        console.log(`Current Reminder saved to storage`)
+
+        sendResponse({ status: 'success', hours, minutes, message: `Reminder set for every ${interval} minutes!` });
+    });
+    return true; // ensures asynchronous response send
   }
 });
 

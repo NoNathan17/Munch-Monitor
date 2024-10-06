@@ -1,26 +1,33 @@
+function updateCurrentReminder(hours, minutes) { // updates current reminder display
+    const reminderText = `Current reminder: ${hours} hour(s) and ${minutes} minute(s)`;
+    console.log(`Current reminder updated to ${reminderText}`)
+    document.getElementById('currentReminder').textContent = reminderText;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    chrome.storage.local.get({ currentReminder: { hours: 0, minutes: 0 } }, (result) => {
+        const { hours, minutes } = result.currentReminder;
+        updateCurrentReminder(hours, minutes); // displays the saved reminder
+    });
+});
+
 document.getElementById('setReminder').addEventListener('click', () => {
-    const hours = parseInt(document.getElementById('hours').value) || 0; // Default to 0 if empty
-    const minutes = parseInt(document.getElementById('minutes').value) || 0; // Default to 0 if empty
+    const hours = parseInt(document.getElementById('hours').value) || 0; // default 0 if empty
+    const minutes = parseInt(document.getElementById('minutes').value) || 0; 
     
-    // Calculate total interval in minutes
+    // calculate total interval in minutes
     const totalInterval = (hours * 60) + minutes;
 
-    // Check if the total interval is a valid number
+    // check if the total interval is a valid number
     if (isNaN(totalInterval) || totalInterval <= 0) {
         alert('Please enter a valid number greater than 0.');
         return;
     }
-    
-    // Clear any existing alarms
-    chrome.alarms.clear('eatReminder', () => {
-        console.log('Previous alarm cleared');
-    });
 
-    // Create a new alarm with the total interval
-    chrome.alarms.create('eatReminder', {
-        delayInMinutes: totalInterval,
-        periodInMinutes: totalInterval,
+    // sends a message to background.js to create the alarm
+    chrome.runtime.sendMessage({ action: 'setReminder', interval: totalInterval }, (response) => {
+        if (response.status === 'success') {
+            updateCurrentReminder(response.hours, response.minutes); // update the displayed reminder
+        }
     });
-
-    console.log('New alarm created');
 });
