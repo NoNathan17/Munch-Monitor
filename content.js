@@ -1,9 +1,13 @@
 console.log('Content script loaded successfully.');
 
+let widgetActive = false
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log('Message received in content script:', message);
     
-    if (message.action === 'spawnWidget') {
+    if (message.action === 'spawnWidget' && !widgetActive) { // only spawns if widget isn't active
+        widgetActive = true
+
         console.log('Spawning widget...');
 
         const myList = ['pusheen', 'cat', 'dog', 'penguin', 'cow', 'axolotyl', 'eevee', 'milkmocha']
@@ -49,6 +53,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             widget.addEventListener('click', function() { // Removes the widget and message bubble when the widget is clicked
                 document.body.removeChild(widget);
                 document.body.removeChild(messageBubble)
+                widgetActive = false
             });
                 return; // Exit the animation loop
         }
