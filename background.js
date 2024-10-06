@@ -1,9 +1,7 @@
-let widgetActive = false // checks if widget is active
-
 function createAlarm(interval) {
   chrome.alarms.create('eatReminder', // creates an alarm called eatReminder
   { 
-  delayInMinutes: interval, 
+  delayInMinutes: 0.05, 
   periodInMinutes: interval
   });
 
@@ -15,6 +13,10 @@ chrome.alarms.onAlarm.addListener(function(alarm) {
   if (alarm.name === 'eatReminder') {
       chrome.tabs.query({active: true, currentWindow: true }, function(tabs) {
           tabs.forEach(function(tab) {
+            if (!tab.url || tab.url.startsWith('chrome://')) { // can't inject script into chrome
+              console.log("Cannot inject into chrome:// URLs.");
+              return;
+          } 
               // injects the content script
               chrome.scripting.executeScript({
                   target: { tabId: tab.id },

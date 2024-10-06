@@ -1,6 +1,6 @@
-console.log('Content script loaded successfully.');
+let widgetActive = false // checks if widget is active
 
-let widgetActive = false
+console.log('Content script loaded successfully.');
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log('Message received in content script:', message);
