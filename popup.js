@@ -13,16 +13,28 @@ function updateTimeLeft() {
             if (timeLeft > 0) {
                 const minutesLeft = Math.floor(timeLeft / 60000); // converts milliseconds to minutes
                 const secondsLeft = Math.floor((timeLeft % 60000) / 1000); // gets remaining seconds
-                document.getElementById('timeLeft').textContent = 
-                    `Time left: ${minutesLeft} minute(s) and ${secondsLeft} second(s)`;
+
+                if (minutesLeft >= 60) {
+                    // displays hours and minutes if more than an hour left
+                    const hoursLeft = Math.floor(minutesLeft / 60);
+                    const remainingMinutes = minutesLeft % 60;
+                    document.getElementById('timeLeft').textContent = 
+                        `Time left: ${hoursLeft} hour(s) and ${remainingMinutes} minute(s)`;
+
+                } else {
+                    // displays minutes and seconds if less than an hour left
+                    document.getElementById('timeLeft').textContent = 
+                        `Time left: ${minutesLeft} minute(s) and ${secondsLeft} second(s)`;
+                }
             } else {
                 document.getElementById('timeLeft').textContent = 'Time left: Less than a minute!';
             }
         } else {
             document.getElementById('timeLeft').textContent = 'No reminder set.';
         }
-    });
+    }); 
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.local.get({ currentReminder: { hours: 0, minutes: 0 } }, (result) => {
