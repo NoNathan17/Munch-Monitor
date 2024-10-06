@@ -1,5 +1,7 @@
-let widgetActive = false // checks if widget is active
-
+// check if widgetActive is already declared
+if (typeof widgetActive === 'undefined') {
+    var widgetActive = false; // declare if it hasn't been declared
+}
 console.log('Content script loaded successfully.');
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -11,7 +13,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.log('Spawning widget...');
 
         const myList = ['pusheen', 'cat', 'dog', 'penguin', 'cow', 'axolotyl', 'eevee', 'milkmocha']
-        const randomWidget = myList[Math.floor(Math.random() * myList.length)] // Gets a random widget from myList
+        const randomWidget = myList[Math.floor(Math.random() * myList.length)] // gets a random widget from myList
 
         const widget = document.createElement('img');
         widget.src = chrome.runtime.getURL('widgets/' + randomWidget + '.gif');
@@ -21,12 +23,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         widget.style.width = '100px'
         widget.style.height = '100px'
         widget.style.zIndex = '9999';
-        document.body.appendChild(widget); // Appends the widget to the bottom left of the screen
+        document.body.appendChild(widget); // appends the widget to the bottom left of the screen
 
-        // Animation logic
+        // animation logic
         let posX = 0;
-        const step = 2; // Pixels to move in each step
-        const maxX = window.innerWidth; // Edge of the window
+        const step = 2; // pixels to move in each step
+        const maxX = window.innerWidth; // edge of the window
 
         function animate() {
             posX += step;
@@ -43,22 +45,22 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 messageBubble.style.backgroundColor = 'white';
                 messageBubble.style.borderRadius = '10px';
                 messageBubble.style.zIndex = '9999'
-                document.body.appendChild(messageBubble); // Appends the message bubble to the screen
+                document.body.appendChild(messageBubble); // appends the message bubble to the screen
 
                 widget.style.position = 'fixed'
                 widget.style.bottom = '20px'
                 widget.style.left = '90'
-                document.body.appendChild(widget); // Appends the widget to the bottom right of the screen
+                document.body.appendChild(widget); // appends the widget to the bottom right of the screen
 
-            widget.addEventListener('click', function() { // Removes the widget and message bubble when the widget is clicked
+            widget.addEventListener('click', function() { // removes the widget and message bubble when the widget is clicked
                 document.body.removeChild(widget);
                 document.body.removeChild(messageBubble)
                 widgetActive = false
             });
-                return; // Exit the animation loop
+                return; // exit the animation loop
         }
-        widget.style.left = posX + 'px'; // Updates the widgets position
-        requestAnimationFrame(animate); // Requests next animation frame
+        widget.style.left = posX + 'px'; // updates the widgets position
+        requestAnimationFrame(animate); // requests next animation frame
         }
 
         animate();

@@ -4,11 +4,34 @@ function updateCurrentReminder(hours, minutes) { // updates current reminder dis
     document.getElementById('currentReminder').textContent = reminderText;
 }
 
+function updateTimeLeft() { 
+    chrome.alarms.get('eatReminder', (alarm) => {
+        if (alarm) {
+            const currentTime = Date.now(); 
+            const timeLeft = alarm.scheduledTime - currentTime; 
+
+            if (timeLeft > 0) {
+                const minutesLeft = Math.floor(timeLeft / 60000); // converts milliseconds to minutes
+                const secondsLeft = Math.floor((timeLeft % 60000) / 1000); // gets remaining seconds
+                document.getElementById('timeLeft').textContent = 
+                    `Time left: ${minutesLeft} minute(s) and ${secondsLeft} second(s)`;
+            } else {
+                document.getElementById('timeLeft').textContent = 'Time left: Less than a minute!';
+            }
+        } else {
+            document.getElementById('timeLeft').textContent = 'No reminder set.';
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.local.get({ currentReminder: { hours: 0, minutes: 0 } }, (result) => {
         const { hours, minutes } = result.currentReminder;
         updateCurrentReminder(hours, minutes); // displays the saved reminder
     });
+
+    updateTimeLeft(); // updates the remaining time
+    setInterval(updateTimeLeft, 1000); // update every second
 });
 
 document.getElementById('setReminder').addEventListener('click', () => {

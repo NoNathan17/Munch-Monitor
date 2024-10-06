@@ -1,7 +1,7 @@
 function createAlarm(interval) {
   chrome.alarms.create('eatReminder', // creates an alarm called eatReminder
   { 
-  delayInMinutes: 0.05, 
+  delayInMinutes: interval, 
   periodInMinutes: interval
   });
 
@@ -37,7 +37,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       
       chrome.alarms.clear('eatReminder', () => {
         console.log('Previous alarm cleared');
-        createAlarm(interval); // Create the new alarm after clearing the old one
+        createAlarm(interval); // create the new alarm after clearing the old one
 
 
         // saves current reminder time to storage
