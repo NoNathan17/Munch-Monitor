@@ -1,5 +1,5 @@
 function updateCurrentReminder(hours, minutes) { // updates current reminder display
-    const reminderText = `Current reminder: ${hours} hour(s) and ${minutes} minute(s)`;
+    const reminderText = `Current Reminder Interval: Every ${hours} hour(s) and ${minutes} minute(s)`;
     console.log(`Current reminder updated to ${reminderText}`)
     document.getElementById('currentReminder').textContent = reminderText;
 }
