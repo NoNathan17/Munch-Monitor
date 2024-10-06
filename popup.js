@@ -29,6 +29,7 @@ function updateTimeLeft() {
             } else {
                 document.getElementById('timeLeft').textContent = 'Time left: Less than a minute!';
             }
+            
         } else {
             document.getElementById('timeLeft').textContent = 'No reminder set.';
         }
