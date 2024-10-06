@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "Eating Reminder",
-    "description": "A Chrome extension that reminds you to eat regularly",
+    "name": "Munch Monitor: An Eating Reminder",
+    "description": "Ever forget to eat? Stay healthy and never forget your meals with Munch Monitor!",
     "version": "1.0.0",
     "background": {
         "service_worker": "background.js"
